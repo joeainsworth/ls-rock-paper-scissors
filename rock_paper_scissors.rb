@@ -1,3 +1,5 @@
+require 'pry'
+
 VALID_CHOICES = {
   's' => { name: 'Scissors', beats: %w(p l) },
   'p' => { name: 'Paper', beats: %w(r sp) },
@@ -14,24 +16,26 @@ def win?(first, second)
   VALID_CHOICES[first][:beats].include?(second)
 end
 
-def display_result(player_choice, computer_choice)
+def calculate_result(player_choice, computer_choice)
   if win?(player_choice, computer_choice)
-    'Player won!'
+    'player'
   elsif win?(computer_choice, player_choice)
-    'Computer won!'
+    'computer'
   else
-    "It's a tie!"
+    'tie'
   end
 end
 
 def options
-  VALID_CHOICES.keys.map do |key|
-    "(#{key}) #{VALID_CHOICES[key][:name]}"
-  end
+  VALID_CHOICES.keys.map { |key| "[#{key}] #{VALID_CHOICES[key][:name]}" }
 end
 
 def option_name(option_key)
   VALID_CHOICES[option_key][:name].downcase
+end
+
+def computers_turn
+  VALID_CHOICES.keys.sample
 end
 
 def players_turn
@@ -47,29 +51,52 @@ def players_turn
   end
 end
 
+def display_round(player_choice, computer_choice)
+  "Player chose #{player_choice} and the computer chose #{computer_choice}"
+end
+
+def display_score(player_score, computer_score)
+  "Score; [#{player_score}] Player [#{computer_score}] Computer "
+end
+
+def display_outcome(player_score, computer_score)
+  player_score > computer_score ? 'Player won!' : 'Computer won!'
+end
+
+def play_again
+  prompt('Would you like to play again? [y] yes [n] no')
+  Kernel.gets().chomp()
+end
+
+system 'clear'
+
+player_score = 0
+computer_score = 0
+
 prompt('Welcome to Rock, Paper Scissors!')
 
 loop do
-  player_choice = ''
+  player_choice = players_turn
+  computer_choice = computers_turn
 
-  prompt("Please make your selection from #{options.join(', ').downcase}")
-  loop do
-    player_choice = Kernel.gets().chomp()
-    if VALID_CHOICES.keys.include?(player_choice.downcase)
-      break
-    else
-      prompt("Please enter a valid choice.")
-    end
+  prompt(display_round(option_name(player_choice), option_name(computer_choice)))
+
+  case result = calculate_result(player_choice, computer_choice)
+  when 'player'
+    player_score += 1
+    prompt('Player wins!')
+  when 'computer'
+    computer_score += 1
+    prompt('Computer wins!')
+  when 'tie'
+     prompt("It's a tie!")
   end
 
-  computer_choice = VALID_CHOICES.keys.sample
+  prompt(display_score(player_score, computer_score))
 
-  output = "Player chose #{option_name(player_choice)} and the computer " +
-           "chose #{option_name(computer_choice)}"
-  prompt(output)
-  prompt(display_result(player_choice, computer_choice))
-
-  prompt('Would you like to play again? [y] yes [n] no')
-  play_again = Kernel.gets().chomp()
+  break if player_score == 5 || player_score == 5
   break unless play_again.downcase.start_with?('y')
+  system 'clear'
 end
+
+prompt(display_outcome(player_score, computer_score))
