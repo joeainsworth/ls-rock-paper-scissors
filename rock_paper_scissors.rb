@@ -81,7 +81,7 @@ loop do
 
   prompt(display_round(option_name(player_choice), option_name(computer_choice)))
 
-  case result = calculate_result(player_choice, computer_choice)
+  case calculate_result(player_choice, computer_choice)
   when 'player'
     player_score += 1
     prompt('Player wins!')
@@ -89,14 +89,14 @@ loop do
     computer_score += 1
     prompt('Computer wins!')
   when 'tie'
-     prompt("It's a tie!")
+    prompt("It's a tie!")
   end
 
   prompt(display_score(player_score, computer_score))
 
   break if player_score == 5 ||
-            player_score == 5 ||
-            !play_again.downcase.start_with?('y')
+           player_score == 5 ||
+           !play_again.downcase.start_with?('y')
 
   system 'clear'
 end
