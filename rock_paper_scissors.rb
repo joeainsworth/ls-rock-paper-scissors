@@ -94,8 +94,10 @@ loop do
 
   prompt(display_score(player_score, computer_score))
 
-  break if player_score == 5 || player_score == 5
-  break unless play_again.downcase.start_with?('y')
+  break if player_score == 5 ||
+            player_score == 5 ||
+            !play_again.downcase.start_with?('y')
+
   system 'clear'
 end
 
