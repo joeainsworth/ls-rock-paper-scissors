@@ -73,7 +73,7 @@ system 'clear'
 player_score = 0
 computer_score = 0
 
-prompt('Welcome to Rock, Paper Scissors!')
+prompt('Welcome to Rock, Paper, Scissors, Spock, Lizard!')
 
 loop do
   player_choice = players_turn
@@ -95,7 +95,7 @@ loop do
   prompt(display_score(player_score, computer_score))
 
   break if player_score == 5 ||
-           player_score == 5 ||
+           computer_score == 5 ||
            !play_again.downcase.start_with?('y')
 
   system 'clear'
